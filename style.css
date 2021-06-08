@@ -1,0 +1,218 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat");
+@import url("https://fonts.googleapis.com/css?family=Oswald");
+
+/* Background image by Vincent Rivaud: https://www.pexels.com/photo/white-boats-on-body-of-water-2265876/ */
+
+body
+{
+	font-family: Montserrat, Arial, sans-serif;
+	font-weight: 400;
+	background-color: #182848;
+	background-image: url("../img/back.jpg");
+	background-attachment: fixed;
+	color: white;
+	background-size: cover;
+	background-repeat: no-repeat;
+	margin: 0;
+	overflow-x: hidden;
+}
+
+a
+{
+	color: #6CF;
+	text-decoration: none;
+	transition-duration: 0.2s;
+}
+
+a:hover
+{
+	text-shadow: #6CF 0 0 4px;
+}
+
+.clearfix
+{
+	clear: both;
+}
+
+.content 
+{
+	margin: 5.5em 40px 3em 40px;
+	padding: 0.5em 0.5em 0.5em 0.5em;
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 0;
+	-webkit-backdrop-filter: blur(8px);
+  	backdrop-filter: blur(8px);
+}
+
+.required:before
+{
+	content: "*";
+	color: red;
+	font-weight: 700;
+}
+
+h1, h2, h3, h4, h5, h6 {font-family: Oswald, sans-serif; margin-block-start: 0; margin-block-end: 0;}
+
+h1:first-of-type, h2:first-of-type, h3:first-of-type,
+h4:first-of-type, h5:first-of-type, h6:first-of-type {margin-block-start: 0;}
+
+logo {margin-right: 10px; display: inline-block;}
+
+.logo-full img {display: block; margin-bottom: -1px;}
+
+.logo-mini img {display: none;}
+
+.header
+{
+	z-index: 100;
+	position: fixed;
+	display: flex;
+	top: 0;
+	left: 0;
+	box-sizing: border-box;
+	background: rgba(0, 0, 0, 0.5);
+	justify-content: flex-start;
+	align-items: flex-end;
+	width: 100vw;
+	padding: 10px;
+	-webkit-backdrop-filter: blur(8px);
+  	backdrop-filter: blur(8px);
+}
+
+.footer
+{
+	z-index: 98;
+	position: fixed;
+	display: flex;
+	bottom: 0;
+	left: 0;
+	background: rgba(0, 0, 0, 0.5);
+	justify-content: flex-start;
+	align-items: flex-end;
+	width: 100vw;
+	padding: 10px;
+	-webkit-backdrop-filter: blur(8px);
+  	backdrop-filter: blur(8px);
+}
+
+.unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.strike-out {text-decoration: line-through;}
+
+.opacity-50 {opacity: 50%;}
+
+.nav
+{
+	justify-content: space-between;
+	align-items: flex-end;
+	list-style: none;
+	margin: 0;
+	padding-left: 0;
+}
+
+.nav li
+{
+	display: inline-block;
+}
+
+.nav li a
+{
+	text-decoration: none;
+	color: currentColor;
+	width: auto;
+	margin: 0;
+	text-transform: uppercase;
+}
+
+.nav li a:hover
+{
+	text-shadow: white 0 0 4px;
+}
+
+a:active, .nav li a:active
+{
+	text-shadow: coral 0 0 4px;
+	color: coral;
+}
+
+.nav li + li {padding-left: 12px;}
+
+.accordion {
+	background-color: #999;
+	color: white;
+	border: 2px solid white;
+	cursor: pointer;
+	font-family: inherit;
+	font-size: 1.5em;
+	padding: 8px;
+	width: 100%;
+	text-align: left;
+	border-radius: 0;
+	outline: none;
+}
+
+.panel {
+	padding: 0.5em;
+	display: none;
+	overflow: hidden;
+	box-sizing: border-box;
+	border: 2px solid white;
+}
+
+@media screen and (max-width: 665px) {
+	.logo-full img {display: none;}
+	.logo-mini img {display: block;}
+	.header {align-items: center;}
+	.nav li {display: list-item;}
+	.nav li + li {padding-left: 0;}
+	.content {margin-top: 123px;}
+}
+
+@keyframes fadeOut {
+	100%
+	{
+		opacity: 0;
+		visibility: hidden;
+		display: none;
+	}
+}
+
+.members
+{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+}
+
+.member
+{
+	flex-basis: 10em;
+	flex-shrink: 50%;
+	padding: 1em 0.2em 0 0.2em;
+	margin: 1em 0.2em;
+	border: 1px solid white;
+	background: rgba(0,0,0,0);
+	border-radius: 0.5em;
+	transition: all 0.5s;
+	font-size: 1.5em;
+}
+
+.member:hover
+{
+	transform: scale(1.2);
+	background: rgba(0,0,0,1);
+}
+
+.member-name
+{
+	margin: -0.9em 0 0 0;
+	font-style: oblique;
+	text-align: right;
+}
