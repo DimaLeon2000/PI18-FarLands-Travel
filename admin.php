@@ -100,7 +100,7 @@
 			}
 			case 'msgs': {
 				if ($_POST['action']=='Delete' and isset($_POST['msgID'])) {
-					$itemID = intval($_POST['cnID']);
+					$itemID = intval($_POST['msgID']);
 					$sql = "DELETE FROM msgs WHERE id=$itemID";
 				}
 				break;
