@@ -222,7 +222,7 @@ HTML;}
 	document.getElementsByName('hClass')[0].selectedIndex = parseInt(hotels.find(x => x.id === String(sel)).class.substr(0,1))-1;
 	document.getElementsByName('hBoardBasis')[0].selectedIndex = parseInt(hotels.find(x => x.id === String(sel)).boardBasisID)-1;
 	document.getElementsByName('hCountry')[0].selectedIndex = parseInt(hotels.find(x => x.id === String(sel)).countryID)-1;
-	if (hotels.find(x => x.id === String(sel)).imgLink !== null) {
+	if (hotels.find(x => x.id === String(sel)).imgLink !== null && hotels.find(x => x.id === String(sel)).imgLink !== "") {
 		document.getElementsByName('hImgPreview')[0].src = "./img/uploads/" + hotels.find(x => x.id === String(sel)).imgLink;
 		document.getElementsByName('hImgLink')[0].value = hotels.find(x => x.id === String(sel)).imgLink;
 	} else {
