@@ -10,6 +10,10 @@
 			$title = 'О FarLands - ';
 			$header = 'ℹ О нас';
 			break;
+		case 'orders':
+			$title = 'Заказы - ';
+			$header = '📫 Заказы туров';
+			break;
 		case 'tours':
 			$title = 'Наши туры - ';
 			$header = '🚩 Наши туры';
@@ -67,6 +71,7 @@
 				case 'about': include 'about.php'; break;
 				case 'contact': include 'contact.php'; break;
 				case 'tours': include 'tours.php'; break;
+				case 'orders': include 'orders.php'; break;
 				case 'news': include 'news.php'; break;
 				case 'err404': include '404.html'; break;
 				case 'admin': include 'admin.php'; break;
