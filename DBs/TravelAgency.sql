@@ -6,24 +6,15 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
-CREATE DATABASE IF NOT EXISTS `travel` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `travel`;
 
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` FUNCTION `DateConvMS_MariaDB` (`dt_orig` BINARY(4)) RETURNS DATE RETURN ('0001-01-01' + INTERVAL CONV(HEX(REVERSE(dt_orig)),16,10) DAY)$$
-
-CREATE DEFINER=`root`@`localhost` FUNCTION `InlineMax` (`p_val1` INT, `p_val2` INT) RETURNS INT(11) BEGIN
-	IF p_val1 > p_val2 THEN RETURN p_val1;
-	END IF;
-	RETURN IFNULL(p_val2,p_val1);
-END$$
-
+CREATE FUNCTION `DateConvMS_MariaDB` (`dt_orig` BINARY(4)) RETURNS DATE RETURN ('0001-01-01' + INTERVAL CONV(HEX(REVERSE(dt_orig)),16,10) DAY)$$
 DELIMITER ;
 
 CREATE TABLE `boardbasis` (
   `id` tinyint(3) UNSIGNED NOT NULL,
-  `name` varchar(50) NOT NULL,
-  `abbreviation` varchar(5) NOT NULL
+  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `abbreviation` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `boardbasis` (`id`, `name`, `abbreviation`) VALUES(1, 'Без питания', 'RO');
@@ -37,7 +28,7 @@ INSERT INTO `boardbasis` (`id`, `name`, `abbreviation`) VALUES(8, 'Ультра-
 
 CREATE TABLE `countries` (
   `id` tinyint(3) UNSIGNED NOT NULL,
-  `name` varchar(50) NOT NULL
+  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `countries` (`id`, `name`) VALUES(1, 'Бразилия');
@@ -53,11 +44,11 @@ INSERT INTO `countries` (`id`, `name`) VALUES(10, 'Тайланд');
 INSERT INTO `countries` (`id`, `name`) VALUES(11, 'Вьетнам');
 
 CREATE TABLE `customers` (
-  `id` int(11) NOT NULL,
-  `surname` varchar(30) NOT NULL,
-  `name` varchar(30) NOT NULL,
-  `patronymic` varchar(50) DEFAULT NULL,
-  `phone` char(18) NOT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `surname` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `patronymic` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `phone` char(18) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `customers` (`id`, `surname`, `name`, `patronymic`, `phone`) VALUES(1, 'Ягодич', 'Карп', 'Владимирович', '8(302)988-9826');
@@ -94,7 +85,7 @@ INSERT INTO `customers` (`id`, `surname`, `name`, `patronymic`, `phone`) VALUES(
 
 CREATE TABLE `departurecities` (
   `id` tinyint(3) UNSIGNED NOT NULL,
-  `name` varchar(50) NOT NULL
+  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `departurecities` (`id`, `name`) VALUES(1, 'Москва');
@@ -154,11 +145,11 @@ INSERT INTO `departurecities` (`id`, `name`) VALUES(54, 'Якутск');
 INSERT INTO `departurecities` (`id`, `name`) VALUES(55, 'Ярославль');
 
 CREATE TABLE `employees` (
-  `id` smallint(6) NOT NULL,
-  `surname` varchar(30) NOT NULL,
-  `name` varchar(30) NOT NULL,
-  `patronymic` varchar(50) DEFAULT NULL,
-  `phone` char(18) NOT NULL
+  `id` smallint(6) UNSIGNED NOT NULL,
+  `surname` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `patronymic` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `phone` char(18) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `employees` (`id`, `surname`, `name`, `patronymic`, `phone`) VALUES(1, 'Булгаков', 'Кузьма', 'Ермолаевич', '8(384)379-2655');
@@ -173,12 +164,12 @@ INSERT INTO `employees` (`id`, `surname`, `name`, `patronymic`, `phone`) VALUES(
 INSERT INTO `employees` (`id`, `surname`, `name`, `patronymic`, `phone`) VALUES(10, 'Бочкарёв', 'Даниил', 'Иннокентиевич', '8(405)080-0219');
 
 CREATE TABLE `hotels` (
-  `id` int(11) NOT NULL,
-  `name` varchar(50) NOT NULL,
-  `class` varchar(5) NOT NULL,
+  `id` int(11) UNSIGNED NOT NULL,
+  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `class` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
   `boardBasisID` tinyint(3) UNSIGNED NOT NULL,
   `countryID` tinyint(3) UNSIGNED DEFAULT NULL,
-  `imgLink` varchar(255) DEFAULT NULL
+  `imgLink` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `hotels` (`id`, `name`, `class`, `boardBasisID`, `countryID`, `imgLink`) VALUES(1, 'Continental Inn Hotel', '4*', 3, 1, 'brazil-continental-inn.jpg');
@@ -214,26 +205,26 @@ INSERT INTO `hotels` (`id`, `name`, `class`, `boardBasisID`, `countryID`, `imgLi
 
 CREATE TABLE `msgs` (
   `id` int(11) UNSIGNED NOT NULL,
-  `subject` varchar(80) NOT NULL DEFAULT '',
-  `email` varchar(50) NOT NULL DEFAULT '',
-  `body` text NOT NULL,
+  `subject` varchar(80) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `email` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `body` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `datetime` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `news` (
-  `id` int(11) NOT NULL,
-  `title` varchar(80) NOT NULL DEFAULT '[title missing]',
+  `id` int(11) UNSIGNED NOT NULL,
+  `title` varchar(80) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '[title missing]',
   `datetime` timestamp NOT NULL DEFAULT current_timestamp(),
-  `author` varchar(30) NOT NULL DEFAULT 'Аноним',
-  `body` text NOT NULL
+  `author` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Аноним',
+  `body` text COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `news` (`id`, `title`, `datetime`, `author`, `body`) VALUES(1, 'ПРОВЕРКА', '2021-06-07 15:56:31', 'Леонтьев Д.В.', 'Держись ... очень крепко ...');
-INSERT INTO `news` (`id`, `title`, `datetime`, `author`, `body`) VALUES(2, 'День завершения', '2021-06-07 15:56:15', 'Леонтьев Д.В.', 'После трудных времен программирования сайт наконец-то был запущен.');
+INSERT INTO `news` (`id`, `title`, `datetime`, `author`, `body`) VALUES(2, 'День завершения', '2021-06-11 06:17:49', 'Леонтьев Д.В.', 'После трудных времен программирования сайт наконец-то был запущен.');
 
 CREATE TABLE `orderdetails` (
-  `id` int(11) NOT NULL,
-  `hotelID` int(11) NOT NULL,
+  `id` int(11) UNSIGNED NOT NULL,
+  `hotelID` int(11) UNSIGNED NOT NULL,
   `departCityID` tinyint(3) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -268,11 +259,11 @@ INSERT INTO `orderdetails` (`id`, `hotelID`, `departCityID`) VALUES(28, 9, 2);
 INSERT INTO `orderdetails` (`id`, `hotelID`, `departCityID`) VALUES(30, 7, 52);
 
 CREATE TABLE `orders` (
-  `id` int(11) NOT NULL,
-  `employeeID` smallint(6) DEFAULT NULL,
-  `customerID` int(11) DEFAULT NULL,
+  `id` int(11) UNSIGNED NOT NULL,
+  `employeeID` smallint(6) UNSIGNED DEFAULT NULL,
+  `customerID` int(11) UNSIGNED DEFAULT NULL,
   `discountPercentage` tinyint(3) UNSIGNED NOT NULL,
-  `price` decimal(15,4) NOT NULL,
+  `price` decimal(15,2) NOT NULL,
   `requestDate` date NOT NULL,
   `departDate` date DEFAULT NULL,
   `qtyAdults` tinyint(3) UNSIGNED NOT NULL,
@@ -281,61 +272,59 @@ CREATE TABLE `orders` (
   `nights` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(1, 1, 1, 1, '159984.0000', '2020-03-01', '2020-03-05', 2, 0, 2, 2);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(2, 1, 2, 10, '159984.0000', '2020-03-02', '2020-03-05', 2, 0, 2, 2);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(3, 1, 3, 1, '119988.0000', '2020-03-03', '2020-03-08', 2, 0, 2, 2);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(4, 2, 4, 5, '179982.0000', '2020-03-04', '2020-03-08', 3, 0, 2, 2);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(5, 2, 5, 3, '164983.5000', '2020-03-06', '2020-03-09', 2, 1, 2, 2);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(6, 2, 1, 5, '239976.0000', '2020-03-08', '2020-03-12', 1, 0, 8, 7);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(7, 3, 2, 10, '209979.0000', '2020-03-10', '2020-03-13', 2, 2, 2, 2);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(8, 3, 3, 5, '239976.0000', '2020-03-11', '2020-03-16', 3, 0, 2, 2);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(9, 3, 4, 2, '159984.0000', '2020-03-13', '2020-03-17', 2, 0, 2, 2);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(10, 4, 5, 3, '59994.0000', '2020-03-16', '2020-03-21', 1, 0, 2, 2);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(11, 4, 1, 0, '787421.2500', '2020-03-20', '2020-03-25', 3, 1, 6, 7);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(12, 4, 2, 10, '329967.0000', '2020-03-22', '2020-03-25', 2, 1, 3, 3);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(13, 5, 3, 2, '239976.0000', '2020-03-25', '2020-03-30', 3, 0, 2, 2);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(14, 5, 4, 5, '374962.5000', '2020-03-28', '2020-04-01', 1, 2, 5, 4);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(15, 5, 5, 3, '404959.5000', '2020-03-30', '2020-04-02', 3, 2, 3, 3);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(16, 6, 1, 2, '239976.0000', '2020-04-04', '2020-04-07', 2, 0, 3, 2);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(17, 6, 2, 8, '209979.0000', '2020-04-08', '2020-04-12', 2, 2, 2, 2);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(18, 6, 3, 1, '89991.0000', '2020-04-10', '2020-04-14', 1, 0, 3, 3);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(19, 7, 4, 6, '224977.5000', '2020-04-12', '2020-04-16', 3, 1, 2, 2);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(20, 7, 5, 3, '404959.5000', '2020-04-14', '2020-04-19', 3, 2, 2, 3);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(21, 7, 1, 2, '239976.0000', '2020-04-17', '2020-04-21', 2, 0, 3, 2);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(22, 8, 3, 2, '239976.0000', '2020-04-22', '2020-04-27', 2, 0, 3, 4);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(23, 8, 4, 5, '179982.0000', '2020-04-25', '2020-04-30', 3, 0, 2, 2);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(24, 9, 5, 3, '159984.0000', '2020-04-29', '2020-05-02', 2, 0, 2, 2);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(25, 9, 2, 9, '59994.0000', '2020-05-07', '2020-05-12', 1, 0, 2, 2);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(26, 10, 3, 1, '119988.0000', '2020-05-11', '2020-05-15', 2, 0, 2, 2);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(27, 10, 4, 5, '239976.0000', '2020-05-16', '2020-05-19', 2, 0, 3, 3);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(28, 10, 5, 5, '157484.2500', '2020-05-20', '2020-05-24', 1, 1, 3, 3);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(29, 4, 6, 10, '119988.0000', '2020-09-01', '2020-09-03', 1, 0, 4, 4);
-INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(30, 4, 31, 5, '139986.0000', '2020-09-10', '2020-09-30', 1, 1, 2, 2);
-DELIMITER $$
-CREATE TRIGGER `trg_priceDelete` AFTER DELETE ON `orders` FOR EACH ROW UPDATE orders,orderDetails,hotels SET orders.price = (orders.qtyAdults + orders.qtyChildren * 0.75) * InlineMax(orders.days, orders.nights) * CAST(SUBSTRING(hotels.class,1,1) as UNSIGNED INT) * 9999 WHERE (orders.ID = orderDetails.ID) AND (orderDetails.HotelID = hotels.ID) AND (hotels.Class IS NOT NULL)
-$$
-DELIMITER ;
-DELIMITER $$
-CREATE TRIGGER `trg_priceInsert` AFTER INSERT ON `orders` FOR EACH ROW UPDATE orders,orderDetails,hotels SET orders.price = (orders.qtyAdults + orders.qtyChildren * 0.75) * InlineMax(orders.days, orders.nights) * CAST(SUBSTRING(hotels.class,1,1) as UNSIGNED INT) * 9999 WHERE (orders.ID = orderDetails.ID) AND (orderDetails.HotelID = hotels.ID) AND (hotels.Class IS NOT NULL)
-$$
-DELIMITER ;
-DELIMITER $$
-CREATE TRIGGER `trg_priceUpdate` AFTER UPDATE ON `orders` FOR EACH ROW UPDATE orders,orderDetails,hotels SET orders.price = (orders.qtyAdults + orders.qtyChildren * 0.75) * InlineMax(orders.days, orders.nights) * CAST(SUBSTRING(hotels.class,1,1) as UNSIGNED INT) * 9999 WHERE (orders.ID = orderDetails.ID) AND (orderDetails.HotelID = hotels.ID) AND (hotels.Class IS NOT NULL)
-$$
-DELIMITER ;
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(1, 1, 1, 1, '159984.00', '2020-03-01', '2020-03-05', 2, 0, 2, 2);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(2, 1, 2, 10, '159984.00', '2020-03-02', '2020-03-05', 2, 0, 2, 2);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(3, 1, 3, 1, '119988.00', '2020-03-03', '2020-03-08', 2, 0, 2, 2);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(4, 2, 4, 5, '179982.00', '2020-03-04', '2020-03-08', 3, 0, 2, 2);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(5, 2, 5, 3, '164983.50', '2020-03-06', '2020-03-09', 2, 1, 2, 2);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(6, 2, 1, 5, '239976.00', '2020-03-08', '2020-03-12', 1, 0, 8, 7);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(7, 3, 2, 10, '209979.00', '2020-03-10', '2020-03-13', 2, 2, 2, 2);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(8, 3, 3, 5, '239976.00', '2020-03-11', '2020-03-16', 3, 0, 2, 2);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(9, 3, 4, 2, '159984.00', '2020-03-13', '2020-03-17', 2, 0, 2, 2);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(10, 4, 5, 3, '59994.00', '2020-03-16', '2020-03-21', 1, 0, 2, 2);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(11, 4, 1, 0, '787421.25', '2020-03-20', '2020-03-25', 3, 1, 6, 7);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(12, 4, 2, 10, '329967.00', '2020-03-22', '2020-03-25', 2, 1, 3, 3);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(13, 5, 3, 2, '239976.00', '2020-03-25', '2020-03-30', 3, 0, 2, 2);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(14, 5, 4, 5, '374962.50', '2020-03-28', '2020-04-01', 1, 2, 5, 4);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(15, 5, 5, 3, '404959.50', '2020-03-30', '2020-04-02', 3, 2, 3, 3);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(16, 6, 1, 2, '239976.00', '2020-04-04', '2020-04-07', 2, 0, 3, 2);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(17, 6, 2, 8, '209979.00', '2020-04-08', '2020-04-12', 2, 2, 2, 2);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(18, 6, 3, 1, '89991.00', '2020-04-10', '2020-04-14', 1, 0, 3, 3);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(19, 7, 4, 6, '224977.50', '2020-04-12', '2020-04-16', 3, 1, 2, 2);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(20, 7, 5, 3, '404959.50', '2020-04-14', '2020-04-19', 3, 2, 2, 3);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(21, 7, 1, 2, '239976.00', '2020-04-17', '2020-04-21', 2, 0, 3, 2);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(22, 8, 3, 2, '239976.00', '2020-04-22', '2020-04-27', 2, 0, 3, 4);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(23, 8, 4, 5, '179982.00', '2020-04-25', '2020-04-30', 3, 0, 2, 2);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(24, 9, 5, 3, '159984.00', '2020-04-29', '2020-05-02', 2, 0, 2, 2);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(25, 9, 2, 9, '59994.00', '2020-05-07', '2020-05-12', 1, 0, 2, 2);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(26, 10, 3, 1, '119988.00', '2020-05-11', '2020-05-15', 2, 0, 2, 2);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(27, 10, 4, 5, '239976.00', '2020-05-16', '2020-05-19', 2, 0, 3, 3);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(28, 10, 5, 5, '157484.25', '2020-05-20', '2020-05-24', 1, 1, 3, 3);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(29, 4, 6, 10, '119988.00', '2020-09-01', '2020-09-03', 1, 0, 4, 4);
+INSERT INTO `orders` (`id`, `employeeID`, `customerID`, `discountPercentage`, `price`, `requestDate`, `departDate`, `qtyAdults`, `qtyChildren`, `days`, `nights`) VALUES(30, 4, 31, 5, '139986.00', '2020-09-10', '2020-09-30', 1, 1, 2, 2);
+
+CREATE TABLE `tours` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `countryID` tinyint(3) UNSIGNED NOT NULL,
+  `departcityID` tinyint(3) UNSIGNED NOT NULL,
+  `price` decimal(15,2) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `tours` (`id`, `countryID`, `departcityID`, `price`) VALUES(1, 1, 12, '4999.90');
+INSERT INTO `tours` (`id`, `countryID`, `departcityID`, `price`) VALUES(2, 1, 1, '3999.90');
 CREATE TABLE `vue_countfinal` (
 `ФИО служащего` varchar(35)
-,`Сумма всех заказов` decimal(37,4)
+,`Сумма всех заказов` decimal(37,2)
 ,`Кол-во всех выполненных заказов` bigint(21)
 );
 CREATE TABLE `vue_customerpricesum` (
 `Имя клиента` varchar(30)
 ,`Номер телефона` char(18)
-,`Сумма всех заказов` decimal(37,4)
+,`Сумма всех заказов` decimal(37,2)
 );
 CREATE TABLE `vue_employeemax` (
 `ФИО Служащего` varchar(35)
-,`Стоимость заказа` decimal(15,4)
+,`Стоимость заказа` decimal(15,2)
 );
 CREATE TABLE `vue_hotelnamefirstletter` (
 `Наименование отелей` varchar(50)
@@ -392,6 +381,11 @@ ALTER TABLE `orders`
   ADD KEY `FK_orders_customers` (`customerID`),
   ADD KEY `FK_orders_employees` (`employeeID`);
 
+ALTER TABLE `tours`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `FK_tours_countries` (`countryID`),
+  ADD KEY `FK_tours_departurecities` (`departcityID`);
+
 
 ALTER TABLE `boardbasis`
   MODIFY `id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
@@ -400,25 +394,28 @@ ALTER TABLE `countries`
   MODIFY `id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 ALTER TABLE `customers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 ALTER TABLE `departurecities`
   MODIFY `id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 ALTER TABLE `employees`
-  MODIFY `id` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `id` smallint(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 ALTER TABLE `hotels`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 ALTER TABLE `msgs`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 ALTER TABLE `news`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+ALTER TABLE `tours`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 
 ALTER TABLE `hotels`
@@ -433,6 +430,10 @@ ALTER TABLE `orderdetails`
 ALTER TABLE `orders`
   ADD CONSTRAINT `FK_orders_customers` FOREIGN KEY (`customerID`) REFERENCES `customers` (`id`),
   ADD CONSTRAINT `FK_orders_employees` FOREIGN KEY (`employeeID`) REFERENCES `employees` (`id`);
+
+ALTER TABLE `tours`
+  ADD CONSTRAINT `FK_tours_countries` FOREIGN KEY (`countryID`) REFERENCES `countries` (`id`),
+  ADD CONSTRAINT `FK_tours_departurecities` FOREIGN KEY (`departcityID`) REFERENCES `departurecities` (`id`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
