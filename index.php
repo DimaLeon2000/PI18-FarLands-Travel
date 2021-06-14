@@ -84,7 +84,8 @@
 		$valid_response = md5($A1.':'.$data['nonce'].':'.$data['nc'].':'.$data['cnonce'].':'.$data['qop'].':'.$A2);
 		if (($data['response'] == $valid_response) && !(isset($_GET['action']) && ($_GET['action'] == 'logout')))
 			array_push($headerMenu,['link'=>'⛔ Администрирование', 'href'=>'/?id=admin']);
-	}
+		else array_push($headerMenu,['link'=>'⛔ Войти', 'href'=>'/?id=admin']);
+	} else array_push($headerMenu,['link'=>'⛔ Войти', 'href'=>'/?id=admin']);
 ?>
 <!DOCTYPE html>
 <html>
