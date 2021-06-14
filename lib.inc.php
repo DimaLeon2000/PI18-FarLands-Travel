@@ -1,4 +1,10 @@
 <?php
+	function test_input($data) {
+		$data = trim($data);
+		$data = stripslashes($data);
+		$data = htmlspecialchars($data);
+		return $data;
+	}
 	function drawTable($cols, $rows, $color) {
 		echo "<table border='0'><br />";
 			for ($row = 1; $row <= $rows; $row++) {

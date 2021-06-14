@@ -16,7 +16,7 @@
 			case 'news': {
 				$title=clearStr($_POST['nTitle']);
 				$author=clearStr($_POST['nAuthor']);
-				$body=$_POST['nBody'];
+				$body=clearStr($_POST['nBody']);
 				if ($title <> '' and $author <> '' and $body <> '' and $_POST['action']=='Insert') {
 					$sql = "INSERT INTO news(title,author,body) VALUES ('$title','$author','$body')";
 				}
@@ -121,7 +121,13 @@
 	echo "<div class='panel'>";
 	$sql= "SELECT id, title, author, body, UNIX_TIMESTAMP(datetime) as dt FROM news ORDER BY id DESC";
 	$res=mysqli_query($link,$sql) or die(mysqli_error($link));
-	echo '<form onsubmit="return confirm(\'Вы уверены?\');" action="'.$_SERVER['REQUEST_URI'].'" method="post">';
+	echo '<form onsubmit="if (document.getElementsByName(\'nTitle\')[0].value === \'\')
+{alert(\'Пожалуйста, введите название статьи.\'); return false;}
+else if (document.getElementsByName(\'nArticle\')[0].value === \'\')
+{alert(\'Пожалуйста, введите содержание статьи.\'); return false;}
+else if (document.getElementsByName(\'nBody\')[0].value === \'\')
+{alert(\'Пожалуйста, введите содержание статьи\'); return false;}
+return confirm(\'Вы уверены?\');" action="'.$_SERVER['REQUEST_URI'].'" method="post">';
 	echo '<input type="hidden" name="frmname" value="news"/>';
 	while($row=mysqli_fetch_assoc($res)){
 		$itemID=$row['id'];
@@ -135,9 +141,9 @@
 HTML;}
 	$res=mysqli_query($link,$sql) or die(mysqli_error($link));
 	$newsList=json_encode(mysqli_fetch_all($res,MYSQLI_ASSOC));
-	echo "<label>Название статьи: </label><br /><input name='nTitle' type='text' size='30' maxlength='80'/><br />";
-	echo "<label>Автор статьи: </label><br /><input name='nAuthor' type='text' size='30' maxlength='30'/><br />";
-	echo "<label>Содержание: </label><br /><textarea name='nBody' cols='50' rows='10'></textarea><br /><br />";
+	echo "<label class='required'>Название статьи: </label><br /><input name='nTitle' type='text' size='30' maxlength='80'/><br />";
+	echo "<label class='required'>Автор статьи: </label><br /><input name='nAuthor' type='text' size='30' maxlength='30'/><br />";
+	echo "<label class='required'>Содержание: </label><br /><textarea name='nBody' cols='50' rows='10'></textarea><br /><br />";
 	echo "<input type='submit' name='action' value='Insert' />";
 	echo "<input type='submit' name='action' value='Update' />";
 	echo "<input type='submit' name='action' value='Delete' />";
@@ -156,7 +162,15 @@ HTML;
 	echo '<div class="panel">';
 	$sql= "SELECT h.id, h.name, h.class, h.boardBasisID, b.abbreviation as bAbbr, h.countryID, c.name as cnName, h.imgLink FROM hotels h, boardBasis b, countries c WHERE (h.boardBasisID = b.id AND h.countryID = c.id) ORDER BY h.id DESC";
 	$res=mysqli_query($link,$sql) or die(mysqli_error($link));
-	echo '<form onsubmit="return confirm(\'Вы уверены?\');" action="'.$_SERVER['REQUEST_URI'].'" method="post" enctype="multipart/form-data">';
+	echo '<form onsubmit="if (document.getElementsByName(\'hName\')[0].value === \'\')
+{alert(\'Пожалуйста, введите наименование отеля.\'); return false;}
+else if (document.getElementsByName(\'hClass\')[0].value === \'\')
+{alert(\'Пожалуйста, выберите звёздность отеля.\'); return false;}
+else if (document.getElementsByName(\'hBoardBasis\')[0].value === \'\')
+{alert(\'Пожалуйста, выберите режим питания.\'); return false;}
+else if (document.getElementsByName(\'hCountry\')[0].value === \'\')
+{alert(\'Пожалуйста, выберите страну.\'); return false;}
+return confirm(\'Вы уверены?\');" action="'.$_SERVER['REQUEST_URI'].'" method="post" enctype="multipart/form-data">';
 	echo '<input type="hidden" name="frmname" value="hotels"/>';
 	while($row=mysqli_fetch_assoc($res)){
 		$itemID=$row['id'];
@@ -170,8 +184,9 @@ echo <<<HTML
 HTML;}
 	$res=mysqli_query($link,$sql) or die(mysqli_error($link));
 	$hotelList=json_encode(mysqli_fetch_all($res,MYSQLI_ASSOC));
-	echo "<label>Наименование отеля: </label><br /><input name='hName' type='text' size='30' maxlength='50'/><br />";
-	echo "<label>Звёзднтость отеля: </label><br /><select name='hClass'>
+	echo "<label class='required'>Наименование отеля: </label><br /><input name='hName' type='text' size='30' maxlength='50'/><br />";
+	echo "<label class='required'>Звёзднтость отеля: </label><br /><select name='hClass'>
+		<option value=''></option>
 		<option value='1*'>★ (Туристический)</option>
 		<option value='2*'>★★ (Стандартный)</option>
 		<option value='3*'>★★★ (Комфорт)</option>
@@ -180,7 +195,8 @@ HTML;}
 	</select><br />";
 	$sql="SELECT * from boardbasis";
 	$res=mysqli_query($link,$sql) or die(mysqli_error($link));
-	echo "<label>Режим питания: </label><br /><select name='hBoardBasis'>";
+	echo "<label class='required'>Режим питания: </label><br /><select name='hBoardBasis'>";
+	echo "<option></option>";
 	while($boardbases=mysqli_fetch_assoc($res)){
 		$itemID=$boardbases['id'];
 		$bName=$boardbases['name'];
@@ -189,7 +205,8 @@ HTML;}
 	echo '</select><br />';
 	$sql="SELECT * from countries";
 	$res=mysqli_query($link,$sql) or die(mysqli_error($link));
-	echo "<label>Страна: </label><br /><select name='hCountry'>";
+	echo "<label class='required'>Страна: </label><br /><select name='hCountry'>";
+	echo "<option></option>";
 	while($countries=mysqli_fetch_assoc($res)){
 		$itemID=$countries['id'];
 		$cName=$countries['name'];
@@ -235,7 +252,13 @@ HTML;
 	echo '<div class="panel">';
 	$sql= "SELECT DISTINCT t.id, t.countryID, cn.name as cnName, t.departcityID, d.name as dName, price FROM tours t, countries cn, departurecities d WHERE (t.countryID = cn.id AND t.departcityID = d.id) ORDER BY t.id DESC";
 	$res=mysqli_query($link,$sql) or die(mysqli_error($link));
-	echo '<form onsubmit="return confirm(\'Вы уверены?\');" action="'.$_SERVER['REQUEST_URI'].'" method="post" enctype="multipart/form-data">';
+	echo '<form onsubmit="if (document.getElementsByName(\'tDepartCity\')[0].value === \'\')
+{alert(\'Пожалуйста, выберите город вылета.\'); return false;}
+else if (document.getElementsByName(\'tCountry\')[0].value === \'\')
+{alert(\'Пожалуйста, выберите страну назначения.\'); return false;}
+else if (document.getElementsByName(\'tPrice\')[0].value === \'\')
+{alert(\'Пожалуйста, введите стоимость тура.\'); return false;}
+return confirm(\'Вы уверены?\');" action="'.$_SERVER['REQUEST_URI'].'" method="post" enctype="multipart/form-data">';
 	echo '<input type="hidden" name="frmname" value="tours"/>';
 	while($row=mysqli_fetch_assoc($res)){
 		$itemID=$row['id'];
@@ -250,7 +273,8 @@ HTML;}
 	$tourList=json_encode(mysqli_fetch_all($res,MYSQLI_ASSOC));
 	$sql="SELECT * from departurecities";
 	$res=mysqli_query($link,$sql) or die(mysqli_error($link));
-	echo "<label>Город вылета: </label><br /><select name='tDepartCity'>";
+	echo "<label class='required'>Город вылета: </label><br /><select name='tDepartCity'>";
+	echo "<option></option>";
 	while($departCities=mysqli_fetch_assoc($res)){
 		$itemID=$departCities['id'];
 		$dName=$departCities['name'];
@@ -258,13 +282,14 @@ HTML;}
 	echo '</select><br />';
 	$sql="SELECT * from countries";
 	$res=mysqli_query($link,$sql) or die(mysqli_error($link));
-	echo "<label>Страна назначения: </label><br /><select name='tCountry'>";
+	echo "<label class='required'>Страна назначения: </label><br /><select name='tCountry'>";
+	echo "<option></option>";
 	while($countries=mysqli_fetch_assoc($res)){
 		$itemID=$countries['id'];
 		$cName=$countries['name'];
 		echo "<option value='$itemID'>$cName</option>";}
 	echo '</select><br />';
-	echo "<label>Стоимость: </label><br /><input name='tPrice' type='number' step='.01'/><br /><br />";
+	echo "<label class='required'>Стоимость: </label><br /><input name='tPrice' type='number' step='.01'/><br /><br />";
 	echo "<input type='submit' name='action' value='Insert' />";
 	echo "<input type='submit' name='action' value='Update' />";
 	echo "<input type='submit' name='action' value='Delete' />";
@@ -284,7 +309,9 @@ HTML;
 	echo "<div class='panel'>";
 	$sql= "SELECT id, name FROM countries ORDER BY id DESC";
 	$res=mysqli_query($link,$sql) or die(mysqli_error($link));
-	echo '<form onsubmit="return confirm(\'Вы уверены?\');" action="'.$_SERVER['REQUEST_URI'].'" method="post">';
+	echo '<form onsubmit="if (document.getElementsByName(\'cnName\')[0].value == \'\')
+{alert(\'Пожалуйста, введите название стран.\'); return false;}
+return confirm(\'Вы уверены?\');" action="'.$_SERVER['REQUEST_URI'].'" method="post">';
 	echo '<input type="hidden" name="frmname" value="countries"/>';
 	while($row=mysqli_fetch_assoc($res)){
 		$itemID=$row['id'];
@@ -295,7 +322,7 @@ HTML;
 HTML;}
 	$res=mysqli_query($link,$sql) or die(mysqli_error($link));
 	$countryList=json_encode(mysqli_fetch_all($res,MYSQLI_ASSOC));
-	echo "<label>Название стран: </label><br /><input name='cnName' type='text' size='30' maxlength='80'/><br /><br />";
+	echo "<label class='required'>Название стран: </label><br /><input name='cnName' type='text' size='30' maxlength='80'/><br /><br />";
 	echo "<input type='submit' name='action' value='Insert' />";
 	echo "<input type='submit' name='action' value='Update' />";
 	echo "<input type='submit' name='action' value='Delete' />";
