@@ -126,7 +126,7 @@
 				break;
 			}
 		}
-		mysqli_query($link,$sql) or die(mysqli_error($link));
+		if ($sql <> '') mysqli_query($link,$sql) or die(mysqli_error($link));
 		$sql = '';
 		if ($_POST['frmname']=='news') {
 			$sql = "ALTER TABLE news AUTO_INCREMENT = 1";
@@ -147,7 +147,7 @@
 	echo "<div class='panel'>";
 	$sql= "SELECT id, title, author, body, UNIX_TIMESTAMP(datetime) as dt FROM news ORDER BY id DESC";
 	$res=mysqli_query($link,$sql) or die(mysqli_error($link));
-	echo '<form action=\''.$_SERVER['REQUEST_URI'].'\' method=\'post\'>';
+	echo '<form onsubmit="return confirm(\'Вы уверены?\');" action="'.$_SERVER['REQUEST_URI'].'" method="post">';
 	echo '<input type="hidden" name="frmname" value="news"/>';
 	while($row=mysqli_fetch_assoc($res)){
 		$itemID=$row['id'];
@@ -182,7 +182,7 @@ HTML;
 	echo '<div class="panel">';
 	$sql= "SELECT h.id, h.name, h.class, h.boardBasisID, b.abbreviation as bAbbr, h.countryID, c.name as cnName, h.imgLink FROM hotels h, boardBasis b, countries c WHERE (h.boardBasisID = b.id AND h.countryID = c.id) ORDER BY h.id DESC";
 	$res=mysqli_query($link,$sql) or die(mysqli_error($link));
-	echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="post" enctype="multipart/form-data">';
+	echo '<form onsubmit="return confirm(\'Вы уверены?\');" action="'.$_SERVER['REQUEST_URI'].'" method="post" enctype="multipart/form-data">';
 	echo '<input type="hidden" name="frmname" value="hotels"/>';
 	while($row=mysqli_fetch_assoc($res)){
 		$itemID=$row['id'];
@@ -261,7 +261,7 @@ HTML;
 	echo '<div class="panel">';
 	$sql= "SELECT DISTINCT t.id, t.countryID, cn.name as cnName, t.departcityID, d.name as dName, price FROM tours t, countries cn, departurecities d WHERE (t.countryID = cn.id AND t.departcityID = d.id) ORDER BY t.id DESC";
 	$res=mysqli_query($link,$sql) or die(mysqli_error($link));
-	echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="post" enctype="multipart/form-data">';
+	echo '<form onsubmit="return confirm(\'Вы уверены?\');" action="'.$_SERVER['REQUEST_URI'].'" method="post" enctype="multipart/form-data">';
 	echo '<input type="hidden" name="frmname" value="tours"/>';
 	while($row=mysqli_fetch_assoc($res)){
 		$itemID=$row['id'];
@@ -310,7 +310,7 @@ HTML;
 	echo "<div class='panel'>";
 	$sql= "SELECT id, name FROM countries ORDER BY id DESC";
 	$res=mysqli_query($link,$sql) or die(mysqli_error($link));
-	echo '<form action=\''.$_SERVER['REQUEST_URI'].'\' method=\'post\'>';
+	echo '<form onsubmit="return confirm(\'Вы уверены?\');" action="'.$_SERVER['REQUEST_URI'].'" method="post">';
 	echo '<input type="hidden" name="frmname" value="countries"/>';
 	while($row=mysqli_fetch_assoc($res)){
 		$itemID=$row['id'];
@@ -338,7 +338,7 @@ HTML;
 	echo "<div class='panel'>";
 	$sql= "SELECT id, subject, email, body, UNIX_TIMESTAMP(datetime) as dt FROM msgs ORDER BY id DESC LIMIT 5";
 	$res=mysqli_query($link,$sql) or die(mysqli_error($link));
-	echo '<form action=\''.$_SERVER['REQUEST_URI'].'\' method=\'post\'>';
+	echo '<form onsubmit="return confirm(\'Вы уверены?\');" action="'.$_SERVER['REQUEST_URI'].'" method="post">';
 	echo '<input type="hidden" name="frmname" value="msgs"/>';
 	while($row=mysqli_fetch_assoc($res)){
 		$itemID=$row['id'];
