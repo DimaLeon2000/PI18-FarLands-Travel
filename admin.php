@@ -1,7 +1,6 @@
 <?php
 	if (isset($_GET['action']) && ($_GET['action'] == 'logout')) {
-		echo 'Вы вышли из администрирования...';
-		exit;
+		die ('Вы вышли из администрирования...');
 	}
 	if (!($data = http_digest_parse($_SERVER['PHP_AUTH_DIGEST'])) ||
 			!isset($users[$data['username']]))
