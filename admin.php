@@ -1,40 +1,14 @@
 <?php
-	$realm = 'Access to the Control Panel';
-	$users = array('admin' => '4u514nd3r');
-
-	if (empty($_SERVER['PHP_AUTH_DIGEST'])) {
-		header('HTTP/1.0 401 Unauthorized');
-		header('WWW-Authenticate: Digest realm="'.$realm.'",qop="auth",nonce="'.uniqid().'",opaque="'.md5($realm).'"');
-		die(include '401.html');
+	if (isset($_GET['action']) && ($_GET['action'] == 'logout')) {
+		echo 'Вы вышли из администрирования...';
+		exit;
 	}
-
 	if (!($data = http_digest_parse($_SERVER['PHP_AUTH_DIGEST'])) ||
-		!isset($users[$data['username']]))
-		die('Неправильные данные!');
-
-	$A1 = md5($data['username'] . ':' . $realm . ':' . $users[$data['username']]);
-	$A2 = md5($_SERVER['REQUEST_METHOD'].':'.$data['uri']);
-	$valid_response = md5($A1.':'.$data['nonce'].':'.$data['nc'].':'.$data['cnonce'].':'.$data['qop'].':'.$A2);
-
+			!isset($users[$data['username']]))
+			die('Неправильные данные!');
+	
 	if ($data['response'] != $valid_response)
 		die('Неправильные данные!');
-
-	// функция разбора заголовка http auth
-	function http_digest_parse($txt)
-	{
-		// защита от отсутствующих данных
-		$needed_parts = array('nonce'=>1, 'nc'=>1, 'cnonce'=>1, 'qop'=>1, 'username'=>1, 'uri'=>1, 'response'=>1);
-		$data = array();
-		$keys = implode('|', array_keys($needed_parts));
-
-		preg_match_all('@(' . $keys . ')=(?:([\'"])([^\2]+?)\2|([^\s,]+))@', $txt, $matches, PREG_SET_ORDER);
-
-		foreach ($matches as $m) {
-			$data[$m[1]] = $m[3] ? $m[3] : $m[4];
-			unset($needed_parts[$m[1]]);
-		}
-		return $needed_parts ? false : $data;
-	}
 
 	include 'dbConfig.php';
 	if($_SERVER['REQUEST_METHOD']=='POST'){
@@ -44,12 +18,12 @@
 				$title=clearStr($_POST['nTitle']);
 				$author=clearStr($_POST['nAuthor']);
 				$body=$_POST['nBody'];
-				if (isset($_POST['nTitle']) and isset($_POST['nAuthor']) and isset($_POST['nBody']) and $_POST['action']=='Insert') {
+				if ($title <> '' and $author <> '' and $body <> '' and $_POST['action']=='Insert') {
 					$sql = "INSERT INTO news(title,author,body) VALUES ('$title','$author','$body')";
 				}
 				if (isset($_POST['nID'])){
 					$itemID = intval($_POST['nID']);
-					if ($_POST['action']=='Update') {
+					if ($title <> '' and $author <> '' and $body <> '' and $_POST['action']=='Update') {
 						$sql = "UPDATE news SET title='$title', author='$author', body='$body' WHERE id=$itemID";
 					}
 					if ($_POST['action']=='Delete') {
@@ -62,12 +36,12 @@
 				$country=intval($_POST['tCountry']);
 				$departcity=intval($_POST['tDepartCity']);
 				$price=floatval($_POST['tPrice']);
-				if (isset($_POST['tCountry']) and isset($_POST['tDepartCity']) and isset($_POST['tPrice']) and $_POST['action']=='Insert') {
+				if ($country <> 0 and $departcity <> 0 and $price <> null and $_POST['action']=='Insert') {
 					$sql = "INSERT INTO tours(countryID,departcityID,price) VALUES ($country,$departcity,$price);";
 				}
 				if (isset($_POST['tID'])){
 					$itemID = intval($_POST['tID']);
-					if ($_POST['action']=='Update') {
+					if ($country <> 0 and $departcity <> 0 and $price <> null and $_POST['action']=='Update') {
 						$sql = "UPDATE tours SET countryID=$country, departcityID=$departcity, price=$price WHERE id=$itemID";
 					}
 					if ($_POST['action']=='Delete') {
@@ -88,12 +62,12 @@
 						include('upload.php');
 					} else $hImgLink=null;
 				}
-				if (isset($_POST['hName']) and isset($_POST['hClass']) and isset($_POST['hBoardBasis']) and isset($_POST['hCountry']) and $_POST['action']=='Insert') {
+				if ($name <> '' and $_POST['action']=='Insert') {
 					$sql = "INSERT INTO hotels(name,class,boardbasisid,countryid,imgLink) VALUES ('$name','$class',$boardBasis,$country,$hImgLink)";
 				}
 				if (isset($_POST['hID'])){
 					$itemID = intval($_POST['hID']);
-					if ($_POST['action']=='Update') {
+					if ($name <> '' and $_POST['action']=='Update') {
 						$sql = "UPDATE hotels SET name='$name', class='$class', boardBasisID=$boardBasis, countryID=$country, imgLink='$hImgLink' WHERE id=$itemID";
 					}
 					if ($_POST['action']=='Delete') {
@@ -104,12 +78,12 @@
 			}
 			case 'countries': {
 				$name=clearStr($_POST['cnName']);
-				if (isset($_POST['cnName']) and $_POST['action']=='Insert') {
+				if ($name <> '' and $_POST['action']=='Insert') {
 					$sql = "INSERT INTO countries(name) VALUES ('$name')";
 				}
 				if (isset($_POST['cnID'])){
 					$itemID = intval($_POST['cnID']);
-					if ($_POST['action']=='Update') {
+					if ($name <> '' and $_POST['action']=='Update') {
 						$sql = "UPDATE countries SET name='$name' WHERE id=$itemID";
 					}
 					if ($_POST['action']=='Delete') {
@@ -143,6 +117,7 @@
 		header('Location:'.$_SERVER['PHP_SELF'].'?id=admin');
 		exit;
 	}
+	echo "<a href='/?id=admin&action=logout'>Выйти</a>";
 	echo "<button class='accordion'>Новости</button>";
 	echo "<div class='panel'>";
 	$sql= "SELECT id, title, author, body, UNIX_TIMESTAMP(datetime) as dt FROM news ORDER BY id DESC";
