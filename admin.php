@@ -123,8 +123,8 @@
 	$res=mysqli_query($link,$sql) or die(mysqli_error($link));
 	echo '<form onsubmit="if (document.getElementsByName(\'nTitle\')[0].value === \'\')
 {alert(\'Пожалуйста, введите название статьи.\'); return false;}
-else if (document.getElementsByName(\'nArticle\')[0].value === \'\')
-{alert(\'Пожалуйста, введите содержание статьи.\'); return false;}
+else if (document.getElementsByName(\'nAuthor\')[0].value === \'\')
+{alert(\'Пожалуйста, введите автор статьи.\'); return false;}
 else if (document.getElementsByName(\'nBody\')[0].value === \'\')
 {alert(\'Пожалуйста, введите содержание статьи\'); return false;}
 return confirm(\'Вы уверены?\');" action="'.$_SERVER['REQUEST_URI'].'" method="post">';
